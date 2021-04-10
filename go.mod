@@ -1,4 +1,4 @@
-module goblog
+module github.com/lookobe/goblog
 
 go 1.15
 
