@@ -33,6 +33,27 @@ type Article struct {
 	ID          int64
 }
 
+type Object struct {
+
+}
+// object的方法
+func (obj *Object) method() {
+
+}
+// 只是一个函数
+func function() {
+
+}
+
+func (a Article) Link() string {
+	showURL,err := router.Get("articles.show").URL("id",strconv.FormatInt(a.ID,10))
+	if err != nil {
+		checkError(err)
+		return ""
+	}
+	return showURL.String()
+}
+
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "<h1>Hello, 欢迎来到 goblog！</h1>")
 }
@@ -189,7 +210,29 @@ func articlesUpdateHandle(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func articlesIndexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "访问文章列表")
+	// 1. 执行查询语句，返回一个结果集
+	rows,err := db.Query("select * from articles")
+	checkError(err)
+	defer rows.Close()
+
+	var articles []Article
+	// 2. 循环读取结果
+	for rows.Next() {
+		var article Article
+		// 2.1 扫描每一行的结果并复制到一个article对象
+		err := rows.Scan(&article.ID,&article.Title,&article.Body)
+		checkError(err)
+		// 2.2 将article追加到articles的这个数组中
+		articles= append(articles, article)
+	}
+	// 2.3 检测遍历时是否发生错误
+	err = rows.Err()
+	checkError(err)
+	// 3. 加载模板
+	tmpl,err :=  template.ParseFiles("resources/views/articles/index.gohtml")
+	checkError(err)
+	// 4. 渲染模板，将所有文章的数据传输进去
+	tmpl.Execute(w,articles)
 }
 
 func articlesStoreHandler(w http.ResponseWriter, r *http.Request) {
@@ -329,6 +372,9 @@ func createTables() {
 }
 
 func main() {
+	o := new(Object)
+	o.method()
+	function()
 	initDB()
 	createTables()
 
@@ -348,6 +394,8 @@ func main() {
 
 	// 中间件：强制内容类型为HTML
 	router.Use(forceHTMLMiddleware)
+
+
 
 	http.ListenAndServe(":3000", removeTrailingSlash(router))
 }
