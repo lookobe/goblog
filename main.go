@@ -8,15 +8,13 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
-	"time"
 	"unicode/utf8"
-	"goblog/route"
-	"goblog/logger"
-	"goblog/types"
+	"goblog/pkg/route"
+	"goblog/pkg/logger"
+	"goblog/pkg/types"
+	"goblog/pkg/database"
 
 
-	"github.com/go-sql-driver/mysql"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
@@ -34,42 +32,6 @@ type ArticlesFormData struct {
 type Article struct {
 	Title, Body string
 	ID          int64
-}
-
-func createTables() {
-	createArticlesSQL := `CREATE TABLE IF NOT EXISTS articles(
-		id bigint(20) PRIMARY KEY AUTO_INCREMENT NOT NULL,
-		title varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-		body longtext COLLATE utf8mb4_unicode_ci
-	);`
-	_, err := db.Exec(createArticlesSQL)
-	logger.LogError(err)
-
-}
-func initDB() {
-	var err error
-	config := mysql.Config{
-		User:                 "admin",
-		Passwd:               "Admin_12",
-		Addr:                 "180.163.53.44:3360",
-		Net:                  "tcp",
-		DBName:               "goblog",
-		AllowNativePasswords: true,
-	}
-	// 准备数据库连接池
-	db, err = sql.Open("mysql", config.FormatDSN())
-	logger.LogError(err)
-
-	// 设置最大连接数
-	db.SetMaxOpenConns(25)
-	// 设置最大空闲连接数
-	db.SetMaxIdleConns(25)
-	// 设置每个链接的过期时间
-	db.SetConnMaxLifetime(5 * time.Minute)
-
-	// 尝试连接，失败会报错
-	err = db.Ping()
-	logger.LogError(err)
 }
 
 type Object struct {
@@ -422,13 +384,15 @@ func articlesDeleteHandler(w http.ResponseWriter,r *http.Request) {
 }
 
 func main() {
+	database.Initialize()
+	db = database.DB
+
+	route.Initialize()
+	router= route.Router
+
 	o := new(Object)
 	o.method()
 	function()
-	initDB()
-	createTables()
-	route.Initialize()
-	router= route.Router
 
 	router.HandleFunc("/", homeHandler).Methods("GET").Name("home")
 	router.HandleFunc("/about", aboutHandler).Methods("GET").Name("about")
