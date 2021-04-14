@@ -11,7 +11,7 @@ import (
 	"unicode/utf8"
 
 	"goblog/pkg/logger"
-	"goblog/pkg/types"
+
 	"goblog/pkg/database"
 	"goblog/bootstrap"
 
@@ -391,6 +391,7 @@ func main() {
 
 	// route.Initialize()
 	// router= route.Router
+	bootstrap.SetupDB()
 	router = bootstrap.SetupRoute()
 
 	o := new(Object)
