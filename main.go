@@ -56,14 +56,6 @@ func getArticleByID(id string) (Article, error) {
 	err := db.QueryRow(query, id).Scan(&article.ID, &article.Title, &article.Body)
 	return article, err
 }
-func (a Article) Link() string {
-	showURL,err := router.Get("articles.show").URL("id",strconv.FormatInt(a.ID,10))
-	if err != nil {
-		logger.LogError(err)
-		return ""
-	}
-	return showURL.String()
-}
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "<h1>Hello, 欢迎来到 goblog！</h1>")
@@ -78,35 +70,6 @@ func notFoundHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
 	fmt.Fprint(w, "<h1>请求页面未找到 :(</h1><p>如有疑惑，请联系我们。</p>")
 }
-
-// func articlesShowHandle(w http.ResponseWriter, r *http.Request) {
-// 	// 1. 获取 URL 参数
-// 	id := getRouterVariable("id", r)
-// 	// 2. 读取对应的文章数据
-// 	article, err := getArticleByID(id)
-
-// 	// 3. 如果出现错误
-// 	if err != nil {
-// 		if err == sql.ErrNoRows {
-// 			// 3.1 数据未找到
-// 			w.WriteHeader(http.StatusNoContent)
-// 			fmt.Fprint(w, "404 文章未找到~")
-// 		} else {
-// 			// 3.2 数据库错误
-// 			logger.LogError(err)
-// 			w.WriteHeader(http.StatusInternalServerError)
-// 			fmt.Fprint(w, "500 服务器内部错误")
-// 		}
-// 	} else {
-// 		// 4.读取成功,显示文章
-// 		tmpl,err := template.New("show.gohtml").Funcs(template.FuncMap{
-// 			"RouteName2URL": route.Name2URL,
-// 			"Int64ToString": types.Int64ToString,
-// 		}).ParseFiles("resources/views/articles/show.gohtml")
-// 		logger.LogError(err)
-// 		tmpl.Execute(w, article)
-// 	}
-// }
 
 func articlesEditHandler(w http.ResponseWriter, r *http.Request) {
 	// 1. 获取 URL 参数
@@ -212,32 +175,6 @@ func articlesUpdateHandle(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
-func articlesIndexHandler(w http.ResponseWriter, r *http.Request) {
-	// 1. 执行查询语句，返回一个结果集
-	rows,err := db.Query("select * from articles")
-	logger.LogError(err)
-	defer rows.Close()
-
-	var articles []Article
-	// 2. 循环读取结果
-	for rows.Next() {
-		var article Article
-		// 2.1 扫描每一行的结果并复制到一个article对象
-		err := rows.Scan(&article.ID,&article.Title,&article.Body)
-		logger.LogError(err)
-		// 2.2 将article追加到articles的这个数组中
-		articles= append(articles, article)
-	}
-	// 2.3 检测遍历时是否发生错误
-	err = rows.Err()
-	logger.LogError(err)
-	// 3. 加载模板
-	tmpl,err :=  template.ParseFiles("resources/views/articles/index.gohtml")
-	logger.LogError(err)
-	// 4. 渲染模板，将所有文章的数据传输进去
-	tmpl.Execute(w,articles)
-}
-
 func articlesStoreHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.PostFormValue("title")
 	body := r.PostFormValue("body")
@@ -385,6 +322,7 @@ func articlesDeleteHandler(w http.ResponseWriter,r *http.Request) {
 	}
 }
 
+
 func main() {
 	database.Initialize()
 	db = database.DB
@@ -399,7 +337,7 @@ func main() {
 	function()
 
 	// router.HandleFunc("/articles/{id:[0-9]+}", articlesShowHandler).Methods("GET").Name("articles.show")
-	router.HandleFunc("/articles", articlesIndexHandler).Methods("GET").Name("articles.index")
+	// router.HandleFunc("/articles", articlesIndexHandler).Methods("GET").Name("articles.index")
 	router.HandleFunc("/articles", articlesStoreHandler).Methods("POST").Name("articles.store")
 
 	router.HandleFunc("/articles/create", articlesCreateHandler).Methods("GET").Name("articles.create")
