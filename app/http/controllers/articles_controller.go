@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"unicode/utf8"
 	"strconv"
+	"path/filepath"
 	"goblog/pkg/route"
 	"goblog/pkg/types"
 	"goblog/pkg/logger"
@@ -60,11 +61,22 @@ func (*ArticlesController) Index(w http.ResponseWriter,r *http.Request) {
 		fmt.Fprint(w,"500 服务器内部错误")
 	} else {
 		// 2. 加载模版
-		tmpl,err := template.ParseFiles("resources/views/articles/index.gohtml")
+		// 2.0 设置模板相对路径
+		viewDir := "resources/views"
+
+		// 2.1 所有布局模板文件 Slice
+		files,err := filepath.Glob(viewDir + "/layouts/*.gohtml")
+		logger.LogError(err)
+
+		// 2.2 在 Slice 里新增我们的目标文件
+		newFiles := append(files,viewDir+"/articles/index.gohtml")
+
+		// 2.3 解析模板文件
+		tmpl,err := template.ParseFiles(newFiles...)
 		logger.LogError(err)
 
 		// 3. 渲染模版。将所有文章的数据传递出去
-		tmpl.Execute(w,articles)
+		tmpl.ExecuteTemplate(w,"app",articles)
 	}
 }
 
