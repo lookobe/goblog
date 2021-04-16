@@ -9,6 +9,10 @@ import (
 func Int64ToString(num int64) string {
 	return strconv.FormatInt(num,10)
 }
+// Uint64ToString 将uint64 转换为 string
+func Uint64ToString(num uint64) string {
+	return strconv.FormatUint(num,10)
+}
 
 // StringToInt 将字符串转换为 int5
 func StringToInt(str string) int {
