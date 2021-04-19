@@ -109,7 +109,7 @@ func (*ArticlesController) Store (w http.ResponseWriter, r *http.Request) {
             "Title": title,
             "Body": body,
             "Errors": errors,
-        },"articles.create","articles,_form_field")
+        },"articles.create","articles._form_field")
 	}
 }
 // Edit 文章更新页面
