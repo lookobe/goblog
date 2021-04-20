@@ -8,14 +8,6 @@ import (
 	"gorm.io/driver/mysql"
 )
 
-// config := mysql.Config{
-// 	User:                 "admin",
-// 	Passwd:               "Admin_12",
-// 	Addr:                 "180.163.53.44:3360",
-// 	Net:                  "tcp",
-// 	DBName:               "goblog",
-// 	AllowNativePasswords: true,
-// }
 // DB gorm.DB 对象
 var DB *gorm.DB
 // ConnectDB 初始化模型
