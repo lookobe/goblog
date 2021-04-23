@@ -46,8 +46,9 @@ func (*AuthController) DoRegister(w http.ResponseWriter, r *http.Request) {
 		_user.Create()
 		fmt.Println(_user.ID)
 		if _user.ID >= 0 {
+			// 登陆用户并跳转到首页
+			auth.Login(_user)
 			http.Redirect(w,r,"/", http.StatusFound)
-			fmt.Println("===这里1233")
 		} else {
 			w.WriteHeader(http.StatusInternalServerError)
 			fmt.Println("===这额外地方撒上")
