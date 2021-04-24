@@ -9,6 +9,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/thedevsaddam/govalidator v1.9.10
 	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b
+	golang.org/x/text v0.3.3
 	golang.org/x/tools v0.1.0
 	gorm.io/driver/mysql v1.0.5
 	gorm.io/gorm v1.21.8
