@@ -2,12 +2,12 @@ package controllers
 
 import (
 	"fmt"
-	"net/http"
-	"goblog/pkg/route"
-	"goblog/pkg/logger"
 	"goblog/app/models/article"
-    "goblog/pkg/view"
 	"goblog/app/requests"
+	"goblog/pkg/logger"
+	"goblog/pkg/route"
+	"goblog/pkg/view"
+	"net/http"
 
 	"gorm.io/gorm"
 )
@@ -46,6 +46,7 @@ func (*ArticlesController) Show(w http.ResponseWriter,r *http.Request) {
 
 // Index 文章首页
 func (*ArticlesController) Index(w http.ResponseWriter,r *http.Request) {
+
 	// 1. 获取结果集
 	articles, err := article.GetAll()
 	if err != nil {
