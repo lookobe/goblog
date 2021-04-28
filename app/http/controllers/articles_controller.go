@@ -58,6 +58,7 @@ func (*ArticlesController) Create(w http.ResponseWriter,r *http.Request) {
 // Store 文章创建页面
 func (*ArticlesController) Store(w http.ResponseWriter, r *http.Request) {
 	// 1. 初始化数据
+	// 绑定文章作者
 	currentUser := auth.User()
 	_article := article.Article{
 		Title: r.PostFormValue("title"),
