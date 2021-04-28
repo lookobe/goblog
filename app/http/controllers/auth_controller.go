@@ -46,7 +46,7 @@ func (*AuthController) DoRegister(w http.ResponseWriter, r *http.Request) {
 		// 4. 验证成功，创建数据
 		_user.Create()
 		fmt.Println(_user.ID)
-		if _user.ID >= 0 {
+		if _user.ID > 0 || _user.ID == 0 {
 			// 登陆用户并跳转到首页
 			flash.Success("恭喜您注册成功！")
 			auth.Login(_user)
