@@ -1,9 +1,11 @@
 package route
 
 import (
-	"net/http"
-	"github.com/gorilla/mux"
+	"goblog/pkg/config"
 	"goblog/pkg/logger"
+	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 var route *mux.Router
@@ -19,7 +21,7 @@ func Name2URL(routeName string,pairs ...string) string  {
 		logger.LogError(err)
 		return ""
 	}
-	return url.String()
+	return  config.GetString("app.url") + url.String()
 }
 
 // GetRouteVariable 获取 URI 路由参数
