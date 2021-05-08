@@ -15,8 +15,9 @@ type Article struct {
 
 	UserID uint64 `gorm:"not null;index"`
 	User user.User
+	CategoryID uint64 `gorm:"not null;default:8;index"`
 }
-// Link 方法用来生成文章链接
+// Link 方法用来生成文章链接 
 func (a Article) Link() string {
 	return route.Name2URL("articles.show", "id", a.GetStringID())
 }

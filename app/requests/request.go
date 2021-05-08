@@ -49,7 +49,7 @@ func init() {
 	// 	min_cn:2
 	govalidator.AddCustomRule("min_cn",func(field string,rule string,message string,value interface{}) error {
 		valLength := utf8.RuneCountInString(value.(string))
-		l,_ := strconv.Atoi(strings.TrimPrefix(rule,"min_cn:")) //handle other error
+		l,_ := strconv.Atoi(strings.TrimPrefix(rule,"min_cn:")) //handle other error 
 		if valLength < l {
 			if message != "" {
 				return errors.New(message)
