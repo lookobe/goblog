@@ -9,3 +9,4 @@ trim_trailing_whitespace = true
 indent_style = space
 ; 缩进长度为两个空格
 indent_size = 2
+core.autocrlf=false
